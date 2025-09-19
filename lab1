@@ -1,0 +1,173 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace ColorSquaresFromText
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Путь к файлу Aeroport.txt
+                string filePath = "Aeroport.txt";
+                
+                // Проверяем существование файла
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"Файл {filePath} не найден.");
+                    return;
+                }
+
+                // Чтение текста из файла
+                string text = File.ReadAllText(filePath, System.Text.Encoding.UTF8);
+
+                // Получение цветов из слов
+                var result = GetColorsFromText(text);
+                var coloredWords = result.Item1;
+                var colors = result.Item2;
+
+                if (colors.Count == 0)
+                {
+                    Console.WriteLine("Не найдено подходящих слов для создания цветов.");
+                    return;
+                }
+
+                // Выводим найденные цветные слова
+                Console.WriteLine("Найдены цветные слова:");
+                foreach (var word in coloredWords)
+                {
+                    Console.WriteLine(word);
+                }
+
+                // Параметры изображения
+                int squareSize = 30;
+                int columns = 12;
+
+                // Создание изображения
+                string outputPath = CreateColorImage(colors, squareSize, columns);
+                
+                Console.WriteLine($"\nИзображение создано: {outputPath}");
+                Console.WriteLine($"Обработано {colors.Count} цветных слов");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+
+        static (List<string>, List<Color>) GetColorsFromText(string text)
+        {
+            var colors = new List<Color>();
+            var coloredWords = new List<string>();
+
+            // Расширенный словарь цветов с учетом различных форм слов
+            var colorMap = new Dictionary<string, Color>
+            {
+                {"красн", Color.Red},
+                {"син", Color.Blue},
+                {"синь", Color.Blue},
+                {"сине", Color.Blue},
+                {"синяя", Color.Blue},
+                {"синий", Color.Blue},
+                {"зелен", Color.Green},
+                {"желт", Color.Yellow},
+                {"оранж", Color.Orange},
+                {"фиолет", Color.Purple},
+                {"розов", Color.Pink},
+                {"черн", Color.Black},
+                {"бел", Color.White},
+                {"сер", Color.Gray},
+                {"голуб", Color.LightBlue},
+                {"коричн", Color.Brown},
+                {"бирюз", Color.Turquoise},
+                {"золот", Color.Gold},
+                {"серебр", Color.Silver},
+                {"лимо", Color.LemonChiffon},
+                {"лазур", Color.Azure},
+                {"вишн", Color.Crimson},
+                {"изумруд", Color.EmeraldGreen},
+                {"сапфир", Color.DarkBlue},
+                {"бронз", Color.Bronze},
+                {"медн", Color.Copper},
+                {"малинов", Color.Raspberry},
+                {"оливков", Color.Olive},
+                {"пурпур", Color.Magenta},
+                {"нефрит", Color.JadeGreen},
+                {"коралл", Color.Coral}
+            };
+
+            // Ищем слова, содержащие цветовые корни
+            var words = Regex.Matches(text, @"\b[\p{IsCyrillic}]+\b", RegexOptions.IgnoreCase);
+            
+            foreach (Match wordMatch in words)
+            {
+                string word = wordMatch.Value.ToLower();
+                
+                // Проверяем, содержит ли слово любой из цветовых корней
+                var colorMatch = colorMap.FirstOrDefault(kvp => 
+                    word.Contains(kvp.Key) && word.Length >= kvp.Key.Length + 1);
+                
+                if (!colorMatch.Equals(default(KeyValuePair<string, Color>)))
+                {
+                    colors.Add(colorMatch.Value);
+                    coloredWords.Add(wordMatch.Value);
+                }
+            }
+
+            return (coloredWords, colors);
+        }
+
+        static string CreateColorImage(List<Color> colors, int squareSize, int columns)
+        {
+            int rows = (int)Math.Ceiling((double)colors.Count / columns);
+            int width = columns * squareSize;
+            int height = rows * squareSize;
+
+            using (var bitmap = new Bitmap(width, height))
+            using (var graphics = Graphics.FromImage(bitmap))
+            {
+                graphics.Clear(Color.White);
+
+                for (int i = 0; i < colors.Count; i++)
+                {
+                    int row = i / columns;
+                    int col = i % columns;
+                    
+                    int x = col * squareSize;
+                    int y = row * squareSize;
+
+                    using (var brush = new SolidBrush(colors[i]))
+                    {
+                        graphics.FillRectangle(brush, x, y, squareSize, squareSize);
+                    }
+
+                    graphics.DrawRectangle(Pens.Black, x, y, squareSize, squareSize);
+                }
+
+                string outputPath = "color_squares_from_aeroport.png";
+                bitmap.Save(outputPath, ImageFormat.Png);
+                
+                return outputPath;
+            }
+        }
+    }
+
+    public static class ColorExtensions
+    {
+        public static Color EmeraldGreen => Color.FromArgb(80, 200, 120);
+        public static Color LightBlue => Color.FromArgb(173, 216, 230);
+        public static Color Turquoise => Color.FromArgb(64, 224, 208);
+        public static Color Bronze => Color.FromArgb(205, 127, 50);
+        public static Color Copper => Color.FromArgb(184, 115, 51);
+        public static Color Raspberry => Color.FromArgb(135, 38, 87);
+        public static Color Olive => Color.FromArgb(128, 128, 0);
+        public static Color JadeGreen => Color.FromArgb(0, 168, 107);
+        public static Color Coral => Color.FromArgb(255, 127, 80);
+    }
+}

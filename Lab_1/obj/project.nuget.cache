@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "tJ+8a2+gBHc=",
+  "success": true,
+  "projectFilePath": "d:\\CPO-lab\\Lab_1\\Lab_1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nasty\\.nuget\\packages\\microsoft.win32.systemevents\\9.0.9\\microsoft.win32.systemevents.9.0.9.nupkg.sha512",
+    "C:\\Users\\nasty\\.nuget\\packages\\system.drawing.common\\9.0.9\\system.drawing.common.9.0.9.nupkg.sha512"
+  ],
+  "logs": []
+}
