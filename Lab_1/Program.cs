@@ -1,5 +1,4 @@
-﻿
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,7 +24,7 @@ namespace ColorSquaresFromText
 
                 string text = File.ReadAllText(filePath, System.Text.Encoding.UTF8);
 
-                // Получение цветов из слов
+                
                 var result = GetColorsFromText(text);
                 var coloredWords = result.Item1;
                 var colors = result.Item2;
@@ -36,18 +35,16 @@ namespace ColorSquaresFromText
                     return;
                 }
 
-                // Выводим найденные цветные слова
+                
                 Console.WriteLine("Найдены цветные слова:");
                 foreach (var word in coloredWords)
                 {
                     Console.WriteLine(word);
                 }
 
-                // Параметры изображения
                 int squareSize = 20;
                 int columns = 20;
 
-                // Создание изображения
                 string outputPath = CreateColorImage(colors, squareSize, columns);
 
                 Console.WriteLine($"\nИзображение создано: {outputPath}");
@@ -94,7 +91,6 @@ namespace ColorSquaresFromText
                 {"коралл", Color.Coral}
             };
 
-            // Список слов-исключений, которые содержат цветовые корни, но НЕ являются цветами
             var exclusionWords = new HashSet<string>
             {
                 "синди", "синтез", "синхронизация", "синдикат", "синтаксис", "анализ",
@@ -111,7 +107,6 @@ namespace ColorSquaresFromText
                 "серебрение", "серебряник", "серебрянка"
             };
 
-            // Улучшенное регулярное выражение для поиска слов
             var words = Regex.Matches(text, @"\b[\p{IsCyrillic}]{3,}\b", RegexOptions.IgnoreCase);
             
             foreach (Match wordMatch in words)
@@ -119,55 +114,21 @@ namespace ColorSquaresFromText
                 string originalWord = wordMatch.Value;
                 string word = originalWord.ToLower();
                 
-                // Проверяем, является ли слово исключением (не цветом)
                 if (exclusionWords.Contains(word))
                 {
-                    continue; // Пропускаем это слово - это ложное срабатывание
+                    continue; 
                 }
                 
-                // Ищем слова, которые начинаются с цветового корня
-                var colorMatch = colorMap.FirstOrDefault(kvp => word.StartsWith(kvp.Key));
+                var colorMatch = colorMap.FirstOrDefault(KeyValuePair => word.StartsWith(KeyValuePair.Key));
                 
                 if (!colorMatch.Equals(default(KeyValuePair<string, Color>)))
                 {
-                    bool isFalsePositive = CheckForFalsePositive(word, colorMatch.Key);
-                    
-                    if (!isFalsePositive)
-                    {
-                        colors.Add(colorMatch.Value);
-                        coloredWords.Add(originalWord);
-                    }
+                    colors.Add(colorMatch.Value);
+                    coloredWords.Add(originalWord);
                 }
             }
 
             return (coloredWords, colors);
-        }
-
-        // Метод для проверки ложных срабатываний
-        static bool CheckForFalsePositive(string word, string colorRoot)
-        {
-            // Список общих суффиксов, которые указывают на ложные срабатывания
-            var falsePositiveSuffixes = new[]
-            {
-                "тез", "так", "такс", "хрон", "хрония", "дикат", "дикация",
-                "поз", "позиция", "нал", "нализ", "тет", "тетика", "метр",
-                "метрия", "лог", "логия", "граф", "графия", "ном", "номия",
-                "ватый", "речивый", "армеец", "город", "дар", "зем", "быль",
-                "морский", "летристика", "донна", "пухов", "повидный", "дечный",
-                "ятня", "бика", "глазый", "дор", "фей", "невший", "тистый",
-                "ник", "ноша", "ушный", "рение", "рянка"
-            };
-
-            // Если слово заканчивается на один из суффиксов ложных срабатываний
-            foreach (var suffix in falsePositiveSuffixes)
-            {
-                if (word.EndsWith(suffix) && word.StartsWith(colorRoot))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         static string CreateColorImage(List<Color> colors, int squareSize, int columns)
