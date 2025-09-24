@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\CPO-lab\\Lab_1\\Lab_1.csproj": {}
+    "D:\\CPO-lab\\Lab_2\\Lab_2.csproj": {}
   },
   "projects": {
-    "D:\\CPO-lab\\Lab_1\\Lab_1.csproj": {
+    "D:\\CPO-lab\\Lab_2\\Lab_2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\CPO-lab\\Lab_1\\Lab_1.csproj",
-        "projectName": "Lab_1",
-        "projectPath": "D:\\CPO-lab\\Lab_1\\Lab_1.csproj",
+        "projectUniqueName": "D:\\CPO-lab\\Lab_2\\Lab_2.csproj",
+        "projectName": "Lab_2",
+        "projectPath": "D:\\CPO-lab\\Lab_2\\Lab_2.csproj",
         "packagesPath": "C:\\Users\\nasty\\.nuget\\packages\\",
-        "outputPath": "D:\\CPO-lab\\Lab_1\\obj\\",
+        "outputPath": "D:\\CPO-lab\\Lab_2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nasty\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,12 +43,6 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "dependencies": {
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[9.0.9, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",

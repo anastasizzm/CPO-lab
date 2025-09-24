@@ -119,8 +119,17 @@ namespace ColorSquaresFromText
                     continue; 
                 }
                 
-                var colorMatch = colorMap.FirstOrDefault(KeyValuePair => word.StartsWith(KeyValuePair.Key));
-                
+                KeyValuePair<string, Color> colorMatch = default;
+
+                foreach (var pair in colorMap)
+                {
+                    if (word.StartsWith(pair.Key))
+                    {
+                        colorMatch = pair;
+                        break; 
+                    }
+                }
+
                 if (!colorMatch.Equals(default(KeyValuePair<string, Color>)))
                 {
                     colors.Add(colorMatch.Value);
@@ -146,7 +155,6 @@ namespace ColorSquaresFromText
                 {
                     int row = i / columns;
                     int col = i % columns;
-                    
                     int x = col * squareSize;
                     int y = row * squareSize;
 
@@ -158,7 +166,7 @@ namespace ColorSquaresFromText
                     graphics.DrawRectangle(Pens.Black, x, y, squareSize, squareSize);
                 }
 
-                string outputPath = @"D:\CPO-lab\Lab_1\color_squares_from_aeroport.png";
+                string outputPath = @"D:\CPO-lab\Lab_1\color.png";
                 bitmap.Save(outputPath, ImageFormat.Png);
                 
                 return outputPath;

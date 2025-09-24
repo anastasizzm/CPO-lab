@@ -1,0 +1,15 @@
+D:\CPO-lab\Lab_2\bin\Debug\net9.0\Lab_2.exe
+D:\CPO-lab\Lab_2\bin\Debug\net9.0\Lab_2.deps.json
+D:\CPO-lab\Lab_2\bin\Debug\net9.0\Lab_2.runtimeconfig.json
+D:\CPO-lab\Lab_2\bin\Debug\net9.0\Lab_2.dll
+D:\CPO-lab\Lab_2\bin\Debug\net9.0\Lab_2.pdb
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.GeneratedMSBuildEditorConfig.editorconfig
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.AssemblyInfoInputs.cache
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.AssemblyInfo.cs
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.csproj.CoreCompileInputs.cache
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.sourcelink.json
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.dll
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\refint\Lab_2.dll
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.pdb
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\Lab_2.genruntimeconfig.cache
+D:\CPO-lab\Lab_2\obj\Debug\net9.0\ref\Lab_2.dll
