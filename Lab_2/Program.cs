@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 
 struct GeneticData
 {
-    public string protein; // название белка
-    public string organism; // название организма
-    public string amino_acids; // цепочка аминокислот
+    public string protein; 
+    public string organism; 
+    public string amino_acids; 
 }
 
 class Program
@@ -16,10 +13,7 @@ class Program
 
     static void Main(string[] args)
     {
-        // Чтение данных о белках
-        ReadGeneticData("sequences.0.txt");
-        
-        // Обработка команд и запись результатов
+        ReadGeneticData("sequences.0.txt"); 
         ProcessCommands("commands.0.txt", "genedata.0.txt");
     }
 
@@ -39,7 +33,7 @@ class Program
                     {
                         protein = parts[0].Trim(),
                         organism = parts[1].Trim(),
-                        amino_acids = RLDecoding(parts[2].Trim()) // раскодируем RLE
+                        amino_acids = RLDecoding(parts[2].Trim())
                     };
                     geneticDataList.Add(data);
                 }
@@ -47,7 +41,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка при чтении файла {filename}: {ex.Message}");
+            Console.WriteLine($"Error reading file {filename}: {ex.Message}");
         }
     }
 
@@ -57,10 +51,9 @@ class Program
         {
             using (StreamWriter writer = new StreamWriter(outputFile))
             {
-                // Заголовок файла
-                writer.WriteLine("Имя студента");
-                writer.WriteLine("Генетический поиск");
-                writer.WriteLine();
+                writer.WriteLine("Ivan Ivanov");
+                writer.WriteLine("Genetic Searching");
+                writer.WriteLine("-----------------------------------------------------------------------------------------");
 
                 string[] commands = File.ReadAllLines(commandsFile);
                 int commandNumber = 1;
@@ -74,9 +67,9 @@ class Program
 
                     string operation = parts[0].Trim();
                     
-                    // Записываем номер операции
-                    writer.WriteLine($"{commandNumber:D3}");
-                    writer.WriteLine(new string('-', 50));
+                    // Вывод команды перед выполнением операции
+                    writer.WriteLine($"Command: {operation.ToUpper()}");
+                    writer.WriteLine($" {commandNumber:D3} {GetOperationDescription(operation, parts)} ");
 
                     switch (operation.ToLower())
                     {
@@ -106,44 +99,63 @@ class Program
                             break;
                     }
 
-                    writer.WriteLine();
+                    writer.WriteLine("-----------------------------------------------------------------------------------------");
                     commandNumber++;
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка при обработке команд: {ex.Message}");
+            Console.WriteLine($"Error processing commands: {ex.Message}");
         }
     }
 
-    // Операция поиска
+    static string GetOperationDescription(string operation, string[] parts)
+    {
+        switch (operation.ToLower())
+        {
+            case "search":
+                return parts.Length >= 2 ? $"{parts[1].Trim()} organism protein" : "search";
+            case "diff":
+                return parts.Length >= 3 ? $"{parts[1].Trim()} {parts[2].Trim()} amino-acids difference:" : "diff";
+            case "mode":
+                return parts.Length >= 2 ? $"{parts[1].Trim()} amino-acid occurs:" : "mode";
+            default:
+                return operation;
+        }
+    }
+
     static void SearchOperation(StreamWriter writer, string sequence)
     {
-        bool found = false;
+        List<GeneticData> foundResults = new List<GeneticData>();
         
         foreach (GeneticData data in geneticDataList)
         {
             if (data.amino_acids.Contains(sequence))
             {
-                writer.WriteLine($"{data.organism} ({data.protein})");
-                found = true;
+                foundResults.Add(data);
             }
         }
 
-        if (!found)
+        if (foundResults.Count == 0)
         {
-            writer.WriteLine("NOT FOUND");
+            writer.WriteLine(" NOT FOUND");
+        }
+        else
+        {
+            foreach (GeneticData data in foundResults)
+            {
+                writer.WriteLine($" {data.organism} ({data.protein}) ");
+            }
         }
     }
 
-    // Операция сравнения
     static void DiffOperation(StreamWriter writer, string protein1, string protein2)
     {
         GeneticData? data1 = null;
         GeneticData? data2 = null;
 
-        // Поиск белков
+        // Find proteins
         foreach (GeneticData data in geneticDataList)
         {
             if (data.protein.Equals(protein1, StringComparison.OrdinalIgnoreCase))
@@ -152,27 +164,28 @@ class Program
                 data2 = data;
         }
 
-        // Проверка наличия белков
+        // Check if proteins exist
         if (data1 == null || data2 == null)
         {
-            writer.Write("amino-acids difference: MISSING:");
-            if (data1 == null) writer.Write($" {protein1}");
-            if (data2 == null) writer.Write($" {protein2}");
-            writer.WriteLine();
+            if (data1 == null && data2 == null)
+                writer.WriteLine($" MISSING: {protein1} {protein2} ");
+            else if (data1 == null)
+                writer.WriteLine($" MISSING: {protein1} ");
+            else
+                writer.WriteLine($" MISSING: {protein2} ");
             return;
         }
 
-        // Сравнение последовательностей
+        // Compare sequences
         int differences = CalculateDifferences(data1.Value.amino_acids, data2.Value.amino_acids);
-        writer.WriteLine($"amino-acids difference: {differences}");
+        writer.WriteLine($" {differences} ");
     }
 
-    // Операция поиска наиболее частой аминокислоты
     static void ModeOperation(StreamWriter writer, string protein)
     {
         GeneticData? targetData = null;
 
-        // Поиск белка
+        // Find protein
         foreach (GeneticData data in geneticDataList)
         {
             if (data.protein.Equals(protein, StringComparison.OrdinalIgnoreCase))
@@ -184,11 +197,11 @@ class Program
 
         if (targetData == null)
         {
-            writer.WriteLine($"amino-acid occurs: MISSING: {protein}");
+            writer.WriteLine($" MISSING: {protein} ");
             return;
         }
 
-        // Подсчет частоты аминокислот
+        // Count amino acid frequency
         Dictionary<char, int> frequency = new Dictionary<char, int>();
         foreach (char aminoAcid in targetData.Value.amino_acids)
         {
@@ -201,7 +214,7 @@ class Program
             }
         }
 
-        // Поиск наиболее частой аминокислоты
+        // Find most frequent amino acid
         char mostFrequent = ' ';
         int maxCount = 0;
 
@@ -214,30 +227,28 @@ class Program
             }
         }
 
-        writer.WriteLine($"amino-acid occurs: {mostFrequent} ({maxCount})");
+        writer.WriteLine($" {mostFrequent} {maxCount} ");
     }
 
-    // Расчет различий между последовательностями
     static int CalculateDifferences(string seq1, string seq2)
     {
         int differences = 0;
         int minLength = Math.Min(seq1.Length, seq2.Length);
         int maxLength = Math.Max(seq1.Length, seq2.Length);
 
-        // Сравнение по общей длине
+        // Compare common length
         for (int i = 0; i < minLength; i++)
         {
             if (seq1[i] != seq2[i])
                 differences++;
         }
 
-        // Учет разницы в длине
+        // Account for length difference
         differences += (maxLength - minLength);
 
         return differences;
     }
 
-    // RLE декодирование
     static string RLDecoding(string encoded)
     {
         StringBuilder decoded = new StringBuilder();
@@ -247,11 +258,11 @@ class Program
         {
             if (char.IsDigit(encoded[i]))
             {
-                // Извлекаем число повторений
+                // Extract repetition count
                 int count = encoded[i] - '0';
                 i++;
                 
-                // Добавляем повторяющийся символ
+                // Add repeated character
                 if (i < encoded.Length)
                 {
                     decoded.Append(encoded[i], count);
@@ -260,60 +271,12 @@ class Program
             }
             else
             {
-                // Одиночный символ
+                // Single character
                 decoded.Append(encoded[i]);
                 i++;
             }
         }
 
         return decoded.ToString();
-    }
-
-    // RLE кодирование (может пригодиться для других задач)
-    static string RLEncoding(string decoded)
-    {
-        if (string.IsNullOrEmpty(decoded))
-            return string.Empty;
-
-        StringBuilder encoded = new StringBuilder();
-        int count = 1;
-        char current = decoded[0];
-
-        for (int i = 1; i < decoded.Length; i++)
-        {
-            if (decoded[i] == current)
-            {
-                count++;
-            }
-            else
-            {
-                // Добавляем в закодированную строку
-                if (count > 2)
-                {
-                    encoded.Append(count);
-                    encoded.Append(current);
-                }
-                else
-                {
-                    encoded.Append(new string(current, count));
-                }
-                
-                current = decoded[i];
-                count = 1;
-            }
-        }
-
-        // Добавляем последнюю последовательность
-        if (count > 2)
-        {
-            encoded.Append(count);
-            encoded.Append(current);
-        }
-        else
-        {
-            encoded.Append(new string(current, count));
-        }
-
-        return encoded.ToString();
     }
 }

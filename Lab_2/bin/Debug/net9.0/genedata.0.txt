@@ -1,35 +1,35 @@
-Имя студента
-Генетический поиск
-
-001
---------------------------------------------------
-Homo sapiens (Human) (6.8 kDa mitochondrial proteolipid)
-
-002
---------------------------------------------------
-Homo sapiens (Human) (Pre-T/NK cell associated protein 6H9A)
-
-003
---------------------------------------------------
-NOT FOUND
-
-004
---------------------------------------------------
-amino-acids difference: 81
-
-005
---------------------------------------------------
-amino-acids difference: 115
-
-006
---------------------------------------------------
-amino-acids difference: 56
-
-007
---------------------------------------------------
-amino-acid occurs: A (5)
-
-008
---------------------------------------------------
-amino-acid occurs: V (11)
-
+Ivan Ivanov
+Genetic Searching
+-----------------------------------------------------------------------------------------
+Command: SEARCH
+ 001 SIIK organism protein 
+ Homo sapiens (Human) (6.8 kDa mitochondrial proteolipid) 
+-----------------------------------------------------------------------------------------
+Command: SEARCH
+ 002 PLML organism protein 
+ Homo sapiens (Human) (Pre-T/NK cell associated protein 6H9A) 
+-----------------------------------------------------------------------------------------
+Command: SEARCH
+ 003 FK3I organism protein 
+ NOT FOUND
+-----------------------------------------------------------------------------------------
+Command: DIFF
+ 004 6.8 kDa mitochondrial proteolipid Alcohol dehydrogenase amino-acids difference: 
+ 81 
+-----------------------------------------------------------------------------------------
+Command: DIFF
+ 005 RNA-dependent RNA polymerase [Fragment] Alcohol dehydrogenase amino-acids difference: 
+ 115 
+-----------------------------------------------------------------------------------------
+Command: DIFF
+ 006 Cecropin Pre-T/NK cell associated protein 6H9A amino-acids difference: 
+ 56 
+-----------------------------------------------------------------------------------------
+Command: MODE
+ 007 Cecropin amino-acid occurs: 
+ A 5 
+-----------------------------------------------------------------------------------------
+Command: MODE
+ 008 Alcohol dehydrogenase amino-acid occurs: 
+ V 11 
+-----------------------------------------------------------------------------------------
